@@ -1,24 +1,56 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import './style.css';
+import { store } from './context/store';
+import { LandingPage } from './pages/LandingPage';
+import { FlowerSelectionPage } from './pages/FlowerSelectionPage';
+import { MessagePage } from './pages/MessagePage';
+import { PreviewPage } from './pages/PreviewPage';
+import { GalleryPage } from './pages/GalleryPage';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+const app = document.querySelector<HTMLDivElement>('#app')!;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+function render() {
+  const { currentPage } = store.getState();
+  app.innerHTML = '';
+
+  switch (currentPage) {
+    case 'landing':
+      app.appendChild(LandingPage());
+      break;
+    case 'flower-selection':
+      app.appendChild(FlowerSelectionPage());
+      break;
+    case 'message':
+      app.appendChild(MessagePage());
+      break;
+    case 'preview':
+      app.appendChild(PreviewPage());
+      break;
+    case 'gallery':
+      app.appendChild(GalleryPage());
+      break;
+    default:
+      app.appendChild(LandingPage());
+  }
+}
+
+// Initial render
+render();
+
+// Subscribe to store changes
+store.subscribe(render);
+
+// Handle browser navigation
+window.addEventListener('hashchange', () => {
+  const page = window.location.hash.replace('#', '') || 'landing';
+  if (store.getState().currentPage !== page) {
+    store.setState({ currentPage: page });
+  }
+});
+
+// Set initial hash if empty
+if (!window.location.hash) {
+  window.location.hash = 'landing';
+} else {
+  const page = window.location.hash.replace('#', '');
+  store.setState({ currentPage: page });
+}
