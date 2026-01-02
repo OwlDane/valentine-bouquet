@@ -8,9 +8,9 @@ export function FlowerSelectionPage() {
     const { currentBouquet } = store.getState();
 
     container.innerHTML = `
-    <header class="py-4">
-      <h2 class="text-2xl text-white">Choose Your Flowers</h2>
-      <p class="text-white opacity-80 text-sm italic">Select the blooms for your bouquet</p>
+    <header class="py-4 text-center">
+      <h2 class="text-3xl text-white">Choose Your Flowers</h2>
+      <p class="text-white opacity-90 text-lg mt-1" style="font-family: var(--font-heading)">Select the blooms for your bouquet</p>
     </header>
 
     <div class="flex-1 overflow-y-auto p-4">

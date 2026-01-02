@@ -8,19 +8,19 @@ export function MessagePage() {
   const { currentBouquet } = store.getState();
 
   container.innerHTML = `
-    <header class="py-4">
-      <h2 class="text-2xl text-white">Add a Message</h2>
-      <p class="text-white opacity-80 text-sm italic">Pour your heart into words</p>
+    <header class="py-4 text-center">
+      <h2 class="text-3xl text-white">Add a Message</h2>
+      <p class="text-white opacity-90 text-lg mt-1" style="font-family: var(--font-heading)">Pour your heart into words</p>
     </header>
 
-    <div class="flex-1 p-4 flex flex-col gap-6">
+    <div class="flex-1 p-4 flex flex-col justify-center gap-10">
       <div class="bg-white rounded-xl p-4 shadow-lg flex flex-col gap-4">
-        <label class="font-bold text-sm text-gray-500">YOUR MESSAGE</label>
+        <label class="font-bold text-xs text-gray-400 tracking-widest uppercase">YOUR MESSAGE</label>
         <textarea id="message-input" class="w-full h-40 p-4 border-2 border-pink-100 rounded-xl focus:outline-none focus:border-pink-500 text-lg" placeholder="Write something sweet..." style="font-family: ${FONTS.find(f => f.id === currentBouquet.font)?.family || 'inherit'}">${currentBouquet.message}</textarea>
       </div>
 
       <div class="flex flex-col gap-4">
-        <label class="font-bold text-sm text-white">CHOOSE A STYLE</label>
+        <label class="text-white text-center text-xl" style="font-family: var(--font-heading)">Choose a Style</label>
         <div class="grid grid-cols-3 gap-2">
           ${FONTS.map(font => {
             const isSelected = currentBouquet.font === font.id;
@@ -45,23 +45,30 @@ export function MessagePage() {
   `;
 
   const textarea = container.querySelector('#message-input') as HTMLTextAreaElement;
-  textarea.addEventListener('input', (e) => {
-    const value = (e.target as HTMLTextAreaElement).value;
-    store.updateCurrentBouquet({ message: value });
-  });
+  
+  // Update state without full re-render on every keypress
+  // Store update on blur or navigation
+  const syncMessage = () => {
+    store.updateCurrentBouquet({ message: textarea.value });
+  };
+
+  textarea.addEventListener('blur', syncMessage);
 
   container.querySelectorAll('.font-option').forEach(option => {
     option.addEventListener('click', (e) => {
+      syncMessage(); // Save current text before font re-render
       const id = (e.currentTarget as HTMLElement).dataset.id!;
       store.updateCurrentBouquet({ font: id });
     });
   });
 
   container.querySelector('#next-btn')?.addEventListener('click', () => {
+    syncMessage();
     store.navigateTo('preview');
   });
 
   container.querySelector('#back-btn')?.addEventListener('click', () => {
+    syncMessage();
     store.navigateTo('flower-selection');
   });
 
