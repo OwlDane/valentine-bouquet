@@ -1,5 +1,6 @@
 import { store } from '../context/store';
 import { FLOWERS, FONTS } from '../data/assets';
+import html2canvas from 'html2canvas';
 
 export function PreviewPage() {
   const container = document.createElement('div');
@@ -15,30 +16,25 @@ export function PreviewPage() {
     </header>
 
     <div class="flex-1 flex flex-col items-center justify-center p-4">
-      <div id="bouquet-preview-card" class="bg-white rounded-3xl p-8 shadow-2xl w-full flex flex-col items-center gap-4 relative overflow-hidden min-h-400">
-        <!-- Floating Flowers area -->
-        <div class="relative w-full h-64 flex items-center justify-center">
-            <div class="absolute inset-0 flex flex-wrap justify-center items-end pb-4">
+      <div id="polaroid-card" class="bg-white p-4 pb-12 shadow-polaroid rounded-sm rotate-1 transform transition-transform hover:rotate-0">
+        <!-- Flower image area (Square) -->
+        <div class="flower-area aspect-square flex items-center justify-center p-4">
+            <div class="absolute inset-0 flex flex-wrap justify-center items-end pb-8">
                 ${currentBouquet.flowers.length === 0 ? '<p class="text-gray-300 italic">No flowers selected</p>' : ''}
                 ${currentBouquet.flowers.map((f, i) => {
                     const flower = FLOWERS.find(fl => fl.id === f.flowerId) || FLOWERS[0];
                     return Array(f.count).fill(0).map((_, j) => `
-                        <img src="${flower.image}" class="w-28 h-28 object-contain animate-float" style="margin: -25px; animation-delay: ${(i+j)*0.2}s; transform: rotate(${(i+j)*15 - 30}deg)" />
+                        <img src="${flower.image}" class="w-24 h-24 object-contain animate-float" style="margin: -20px; animation-delay: ${(i+j)*0.2}s; transform: rotate(${(i+j)*15 - 30}deg)" />
                     `).join('');
                 }).join('')}
             </div>
         </div>
 
-        <div class="w-full text-center mt-6 z-10">
-            <p class="text-xl italic text-gray-700 font-bold leading-relaxed" style="font-family: ${selectedFont?.family}">
-                "${currentBouquet.message || 'No message added.'}"
+        <!-- Polaroid bottom area -->
+        <div class="w-full text-center mt-8 px-2">
+            <p class="text-2xl text-gray-700 font-bold leading-tight" style="font-family: ${selectedFont?.family}">
+                ${currentBouquet.message || '"Happy Valentine!"'}
             </p>
-        </div>
-        
-        <!-- Decorative elements -->
-        <div class="absolute top-0 left-0 w-full h-2 bg-pink-100 opacity-50"></div>
-        <div class="absolute bottom-4 right-4">
-            <span class="text-pink-200 text-xs font-bold tracking-widest uppercase">VALENTINE 2026</span>
         </div>
       </div>
     </div>
@@ -48,8 +44,8 @@ export function PreviewPage() {
         Save to My Gallery
       </button>
       <div class="grid grid-cols-2 gap-4">
-        <button id="download-btn" class="bg-pink-100 text-pink-600 border-pink-200 py-3 text-sm">
-          Download Image
+        <button id="download-btn" class="bg-pink-100 text-pink-600 border-pink-200 py-3 text-sm flex items-center justify-center gap-2">
+          <span>Download Polaroid</span>
         </button>
         <button id="back-btn" class="bg-gray-100 text-gray-500 border-gray-200 py-3 text-sm">
           Edit Bouquet
@@ -68,10 +64,31 @@ export function PreviewPage() {
     store.navigateTo('message');
   });
 
-  container.querySelector('#download-btn')?.addEventListener('click', () => {
-    // Basic implementation: print the card area
-    // In a real scenario we'd use html2canvas
-    alert('Download functionality would capture the preview card as an image!');
+  container.querySelector('#download-btn')?.addEventListener('click', async () => {
+    const card = container.querySelector('#polaroid-card') as HTMLElement;
+    if (!card) return;
+
+    try {
+      const originalTransform = card.style.transform;
+      card.style.transform = 'none'; // Temporarily remove rotation for clean capture
+      
+      const canvas = await html2canvas(card, {
+        backgroundColor: null,
+        scale: 2, // Higher quality
+        useCORS: true,
+        logging: false
+      });
+
+      card.style.transform = originalTransform;
+
+      const link = document.createElement('a');
+      link.download = `bouquet-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Sorry, could not generate the image. Please try again.');
+    }
   });
 
   return container;
