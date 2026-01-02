@@ -24,8 +24,7 @@ export function PreviewPage() {
                 ${currentBouquet.flowers.map((f, i) => {
                     const flower = FLOWERS.find(fl => fl.id === f.flowerId) || FLOWERS[0];
                     return Array(f.count).fill(0).map((_, j) => `
-                        <img src="${flower.image}" class="w-24 h-24 object-contain animate-float" style="margin: -20px; animation-delay: ${(i+j)*0.2}s; transform: rotate(${(i+j)*15 - 30}deg)" />
-                    `).join('');
+                        <img src="${flower.image}" class="w-64 h-64 object-contain animate-float" style="margin: -50px; animation-delay: ${(i+j)*0.2}s; transform: rotate(${(i+j)*15 - 30}deg)" />                    `).join('');
                 }).join('')}
             </div>
         </div>
