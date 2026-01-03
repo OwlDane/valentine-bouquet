@@ -17,10 +17,10 @@ export function GalleryPage() {
 
     <div class="flex-1 overflow-y-auto p-4">
       ${savedBouquets.length === 0 ? `
-        <div class="flex flex-col items-center justify-center h-full text-white opacity-80 gap-4">
-            <span class="text-6xl">empty</span>
-            <p>You haven't saved any bouquets yet.</p>
-            <button id="create-new-btn" class="mt-4">Start Creating</button>
+        <div class="flex-1 flex flex-col items-center justify-center text-white opacity-80 gap-4">
+            <span class="text-6xl" style="font-family: var(--font-heading)">empty</span>
+            <p class="text-lg">You haven't saved any bouquets yet.</p>
+            <button id="create-new-btn" class="mt-4 px-8">Start Creating</button>
         </div>
       ` : `
         <div class="grid grid-cols-1 gap-6">
@@ -39,7 +39,7 @@ export function GalleryPage() {
                                 <span>${bouquet.flowers.reduce((a, b) => a + b.count, 0)} Flowers</span>
                             </div>
                         </div>
-                        <button class="delete-btn absolute top-4 right-4 text-red-300 hover:text-red-500 bg-transparent border-none shadow-none text-xl p-0" data-id="${bouquet.id}">
+                        <button class="delete-btn absolute top-4 right-4 text-red-300 hover:text-red-500 bg-transparent border-none shadow-none text-2xl p-0 w-auto h-auto min-w-0" style="box-shadow: none; transform: none;" data-id="${bouquet.id}">
                             &times;
                         </button>
                     </div>
