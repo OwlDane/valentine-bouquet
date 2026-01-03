@@ -14,13 +14,13 @@ export function LandingPage() {
       <div>
         <h1 class="text-4xl text-white mb-4 drop-shadow-md">My Valentine's Bouquet</h1>
         <p class="text-white opacity-90 max-w-xs mx-auto mb-8 font-medium">
-          Compose your unique bouquet, choose a cute vase and send it to your loved one ♥
+          Compose your unique flowers, choose a cute vase and send it to your loved one ♥
         </p>
       </div>
 
       <div class="flex flex-col gap-4 w-full px-4">
         <button id="start-btn" class="w-full py-4 text-xl">
-          Create my first bouquet !
+          Create my first bouquet!
         </button>
         <button id="gallery-btn" class="bg-transparent border-none shadow-none text-white underline font-bold py-2">
           View My Gallery
