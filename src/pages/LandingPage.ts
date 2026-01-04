@@ -14,7 +14,7 @@ export function LandingPage() {
       <div>
         <h1 class="text-4xl text-white mb-4 drop-shadow-md">My Valentine's Bouquet</h1>
         <p class="text-white opacity-90 max-w-xs mx-auto mb-8 font-medium">
-          Compose your unique flowers, choose a cute vase and send it to your loved one ♥
+          Compose your unique bouquet, choose a cute flower and send it to your loved one ♥
         </p>
       </div>
 
